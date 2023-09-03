@@ -40,7 +40,7 @@ const Modal = ({activeID, setShowModal}) => {
                         }
                     </div>
 
-                    <a href={portfolio.siteUrl}>
+                    <a href={portfolio.siteUrl} target = "_blank" rel="noreferrer" >
                         <button className="bg-primaryColor text-white py-2 px-3 mt-8 mb-2 rounded-[8px] font-[500] hover:bg-headingColor ease-in duration-300">
                             Learn More
                         </button>

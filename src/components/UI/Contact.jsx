@@ -19,7 +19,7 @@ const Contact = () => {
                                 081101wangzhao@gmail.com                  
                                 </p>
                             </div>
-                            <a href="https://wa.me/86127303">
+                            <a href="https://wa.me/86127303" target = "_blank" rel="noreferrer" >
                                 <div className="mb-5">
                                     <p className="flex gap-5 text-headingColor font-[500] text-[17px] sm:text-[20px] leading-10 sm:pl-10 sm:pr-5 self-start">
                                     <span>
@@ -29,7 +29,7 @@ const Contact = () => {
                                     </p>
                                 </div>
                             </a>
-                            <a href="https://t.me/zhaaaoo">
+                            <a href="https://t.me/zhaaaoo" target = "_blank" rel="noreferrer" >
                                 <div className="mb-5">
                                     <p className="flex gap-5 text-headingColor font-[500] text-[17px] sm:text-[20px] leading-10 sm:pl-10 sm:pr-5 self-start">
                                     <span>
