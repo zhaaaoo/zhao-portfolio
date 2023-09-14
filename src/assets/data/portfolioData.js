@@ -16,7 +16,7 @@ const portfolios = [
     imgUrl: shibushi,
     title: "ShiBuShi? 试不试？",
     description:
-      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Praesentium vitae sunt magnam numquam esse ipsam? Quis qui enim, temporibus dignissimos atque repellendus amet a velit. Dolorem quidem animi doloribus saepe!",
+      "Shibushi (试不试) is an Android application meticulously crafted using Android Studio and integrated with Google Firestore. This app is dedicated to aiding users in organizing their wardrobes, planning their outfits, and sharing their fashion choices within a like-minded community.",
     technologies: ["Java", "Android Studio", "Cloud Firestore"],
     siteUrl: "https://github.com/zhaaaoo/ShiBuShi",
   }

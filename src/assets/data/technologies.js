@@ -116,16 +116,11 @@ const technologies = [
     },
     {
         id: 22,
-        name: 'Sidekiq',
-        imgUrl: "https://www.svgrepo.com/show/354344/sidekiq-icon.svg"
-    },
-    {
-        id: 23,
         name: 'NodeJS',
         imgUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-plain.svg"
     },
     {
-        id: 24,
+        id: 23,
         name: 'Express',
         imgUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg"
     },
