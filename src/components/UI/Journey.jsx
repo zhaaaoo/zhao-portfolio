@@ -1,6 +1,5 @@
 import React from "react";
 import suitcase from '../../assets/images/suitcase-line.png';
-import gradCapImg from '../../assets/images/graduation-cap-line.png';
 
 const Journey = () => {
     return (
