@@ -48,7 +48,7 @@ const Header = () => {
 
                         <div className="leading-[20px]">
                             <h2 className="text-xl text-smallTextColor font-[700]">Zhao</h2>
-                            <p className="text-smallTextColor text-[14px] font-[500]">Personal</p>
+                            {/* <p className="text-smallTextColor text-[14px] font-[500]">Personal</p> */}
                         </div>
                     </div>
                     {/* {  ======================= logo end =======================  } */}

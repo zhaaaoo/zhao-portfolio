@@ -9,9 +9,6 @@ const Hero = () => {
                 <div className="md:flex items-center justify-between sm:flex-col md:flex-row">
                     {/* {  ======================= hero left content =======================  } */}
                     <div className="w-full md:basis-1/2">
-                        <h5 data-aos='fade-right' data-aos-duration='1500' className="text-headingColor font-[600] text-[16px]">
-                            Hello welcome
-                        </h5>
                         <h1 data-aos='fade-up' data-aos-duration='1500' className="text-headingColor font-[800] text-[1.8rem] sm:text-[40px] leading-[35px] sm:leading-[46px] mt-5" >
                             I'm Wang Zhao, <br />Software Developer
                         </h1>
@@ -29,15 +26,14 @@ const Hero = () => {
 
                         </div>
 
-                        <p data-aos='fade-left' data-aos-duration='1500' className="flex gap-2 text-headingColor mt-12 font-[500] text-[15px] leading-7 sm:pl-14 sm:pr-10">
-                            <span>
+                        <p data-aos='fade-left' data-aos-duration='1500' className="flex gap-2 text-headingColor mt-10 font-[500] text-[16px] leading-7 sm:pr-10">
+                            {/* <span>
                                 <i class="ri-graduation-cap-line"></i>
-                            </span>
-                            Hi! I'm Zhao, and I'm gearing up to toss my graduation cap in April 2024. 
-                            Right now, I'm on the lookout for full-time opportunities that revolve around software development.                  
+                            </span> */}
+                            I like to turn coffee into code ☕              
                         </p>
 
-                        <div className="flex items-center gap-9 mt-14">
+                        <div className="flex items-center gap-9 mt-10">
                             <span className="text-smallTextColor text-[15px] font-[600]">
                                 Follow me:
                             </span>

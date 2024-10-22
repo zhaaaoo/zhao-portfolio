@@ -7,7 +7,7 @@ const Modal = ({activeID, setShowModal}) => {
 
     return (
         <div className="w-full h-full fixed top-10 left-0 z-10 bg-headingColor bg-opacity-40">
-            <div className="w-11/12 max-w-[600px] max-h-[80%] overflow-y-auto md:w-full absolute top-1/2 left-1/2 z-20 bg-white rounded-[8px] transform -translate-x-1/2 -translate-y-1/2 p-5">
+            <div className="w-11/12 max-w-[700px] max-h-[80%] overflow-y-auto md:w-full absolute top-1/2 left-1/2 z-20 bg-white rounded-[8px] transform -translate-x-1/2 -translate-y-1/2 p-5">
                 <div>
                     <figure>
                         <img className="rounded-[8px] w-full" src={portfolio.imgUrl} alt="" />
