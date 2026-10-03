@@ -31,7 +31,7 @@ export const experience: Role[] = [
     company: 'NCS',
     title: 'Software Engineer',
     period: 'Jul 2024 – Present',
-    context: 'Logistics management platform for a government defence client: React micro-frontends over Spring Boot.',
+    context: 'Logistics management platform for a defence client, built with React micro-frontends and Spring Boot.',
     points: [
       'Build features in React and TypeScript (Redux Toolkit, Ant Design) across several micro-frontend apps, including pages built around embedded Qlik dashboards, plus light backend debugging and data preparation on the Spring Boot side.',
       'Built and extended several reusable React components in the team’s shared Storybook library, such as paginated, user-configurable tables.',
