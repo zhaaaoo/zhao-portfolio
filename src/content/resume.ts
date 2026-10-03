@@ -33,11 +33,11 @@ export const experience: Role[] = [
     period: 'Jul 2024 – Present',
     context: 'Logistics management platform for a government defence client: React micro-frontends over Spring Boot.',
     points: [
-      'Build features in React and TypeScript (Redux Toolkit, Ant Design) across several micro-frontend apps, including pages around embedded Qlik dashboards, where I fixed filters being lost between pages.',
-      'Added server-side pagination to the shared table component, now used by every app, and built saved column layouts that other teams are moving onto.',
-      'Cut validation of a 1 GB file set from about an hour to about 15 minutes in a Spring Boot CLI application, using parallel batch reads, a custom buffered reader, and hashing each file during the read instead of in a separate pass.',
+      'Build features in React and TypeScript (Redux Toolkit, Ant Design) across several micro-frontend apps, including pages built around embedded Qlik dashboards.',
+      'Built and extended several reusable components in the team’s shared Storybook library, including new features for the shared data table.',
+      'Cut validation of a 1 GB file set from about an hour to about 15 minutes in a Spring Boot CLI application by redesigning how files are read and processed, including parallel batch reads and a custom buffered reader.',
       'Reworked the same application with its original developer so rules are assembled from configurable parts, which let it take on a second, more conditional rule set.',
-      'Deployed the platform to on-premise Windows servers (certificates, database scripts, firewall rules, IIS, Spring Boot services), wrote PowerShell scripts to automate the setup, and debugged configuration and connection issues on client sites.',
+      'Deployed the platform to on-premise Windows servers: configured IIS, TLS certificates, database access and firewall rules, moved the backend services from NSSM to WinSW, and automated the setup with PowerShell. Debugged configuration and connectivity issues on client sites.',
     ],
   },
   {
@@ -57,10 +57,10 @@ export const experience: Role[] = [
 export const projects: Project[] = [
   {
     name: 'Spendulu',
-    stack: 'React, TypeScript, Pyodide, Web Workers · built with Claude Code',
+    stack: 'React, TypeScript, Python, local LLM · built with Claude Code',
     href: 'https://github.com/zhaaaoo/spendulu',
     summary:
-      'Personal-finance app that reads PDF bank statements in the browser. The Python parsing engine runs in a Web Worker through Pyodide, so statements never leave the device.',
+      'Expense tracker for Singapore, where banks have no open-banking API. Imports PDF statements from five local issuers and uses a local LLM to categorise unfamiliar shops, without ever letting it change an amount.',
   },
   {
     name: 'LaparoLymph',
