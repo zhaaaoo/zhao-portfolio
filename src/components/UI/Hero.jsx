@@ -1,6 +1,5 @@
 import React from "react";
 import heroImg from '../../assets/images/zhao-2.png';
-import Resume from '../../assets/wangzhao_resume.pdf';
 
 const Hero = () => {
     return (
@@ -20,7 +19,7 @@ const Hero = () => {
                                     Contact me
                                 </button>
                             </a>
-                            <a href={Resume} target = "_blank" rel="noreferrer" className="text-smallTextColor font-[600] text-[16px] border-b border-solid border-smallTextColor">
+                            <a href="/wang-zhao-resume.pdf" target = "_blank" rel="noreferrer" className="text-smallTextColor font-[600] text-[16px] border-b border-solid border-smallTextColor">
                                 See resume
                             </a>
 
