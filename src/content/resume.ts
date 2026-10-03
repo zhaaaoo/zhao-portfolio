@@ -35,8 +35,8 @@ export const experience: Role[] = [
     points: [
       'Build features in React and TypeScript (Redux Toolkit, Ant Design) across several micro-frontend apps, including pages built around embedded Qlik dashboards, plus light backend debugging and data preparation on the Spring Boot side.',
       'Built and extended several reusable React components in the team’s shared Storybook library, such as paginated, user-configurable tables.',
-      'Cut validation of a 1 GB file set from about an hour to about 15 minutes in a Spring Boot CLI application, and reworked it with its original developer so rules are configurable parts, letting it take a second, more conditional rule set.',
-      'Deployed the platform to Windows servers at the client’s military camps: configured IIS, TLS certificates, database access and firewall rules, moved the backend services from NSSM to WinSW, and automated the setup with PowerShell. Debugged configuration and connectivity issues on site.',
+      'Cut validation of a 1 GB file set from about an hour to about 15 minutes in a Spring Boot CLI application, and reworked it with its original developer so validation rules are configurable.',
+      'Deployed the platform’s frontend, backend, batch and cache services to Windows servers at the client’s military camps: IIS, TLS certificates, database access, firewall rules and Windows services (NSSM, WinSW), with PowerShell scripts to automate the setup. Debugged configuration and connectivity issues on site.',
     ],
   },
   {
@@ -65,7 +65,7 @@ export const projects: Project[] = [
     name: 'LaparoLymph',
     stack: 'Unity, C#, VR',
     summary:
-      'VR surgical trainer built with Duke-NUS Medical School and Singapore General Hospital for my final-year project. Wrote all of the software in a team of seven; demoed to surgeons.',
+      'VR surgical trainer built with Duke-NUS Medical School and Singapore General Hospital for my final-year project. Contributed to the VR software in a team of seven; demoed to surgeons.',
   },
 ];
 
