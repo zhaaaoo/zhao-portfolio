@@ -17,11 +17,7 @@ export type Project = {
 
 export const profile = {
   name: 'Wang Zhao',
-  title: 'Software Engineer',
-  location: 'Singapore',
-  citizenship: 'Singapore Citizen',
-  summary:
-    'Two years on a large React and TypeScript micro-frontend platform in the defence sector, plus backend and deployment work.',
+  headline: ['Software Engineer', 'React, TypeScript', 'Singapore Citizen'],
   links: [
     { label: '081101wangzhao@gmail.com', href: 'mailto:081101wangzhao@gmail.com' },
     { label: 'github.com/zhaaaoo', href: 'https://github.com/zhaaaoo' },
@@ -35,16 +31,13 @@ export const experience: Role[] = [
     company: 'NCS',
     title: 'Software Engineer',
     period: 'Jul 2024 – Present',
-    context:
-      'Logistics platform for a government defence client, built as React micro-frontends over Spring Boot services.',
+    context: 'Logistics management platform for a government defence client: React micro-frontends over Spring Boot.',
     points: [
-      'Build features for three of the platform’s micro-frontend apps in React and TypeScript (Redux Toolkit, Ant Design, Module Federation), and fix and extend components in the team’s shared Storybook library.',
-      'Built saved table layouts, where each user’s column visibility and order persist to the backend. The team later made it a standard customisation in the design system.',
-      'Worked on embedded Qlik analytics dashboards and on shared features across the platform: help centre, notification centre, landing pages and account management.',
-      'Restructured a Spring Boot file-validation service for a second, more conditional rule set: template-method and factory classes so processing steps can be reordered, and strategy classes for building rules.',
-      'Sped up validation of large multi-file sets with parallel batch reads, and by computing each file’s SHA while reading it line by line, so every file is read once instead of twice.',
-      'Set up on-premise servers, wrote the setup and deployment guides, and deployed and debugged on client sites.',
-      'Use the client’s approved on-premise AI coding tools for tests and boilerplate, and maintain the repository’s agent rules (for example, rules that block circular dependencies).',
+      'Build features in React and TypeScript (Redux Toolkit, Ant Design) across several micro-frontend apps, including pages around embedded Qlik dashboards, where I fixed filters being lost between pages.',
+      'Added server-side pagination to the shared table component, now used by every app, and built saved column layouts that other teams are moving onto.',
+      'Cut validation of a 1 GB file set from about an hour to about 15 minutes in a Spring Boot CLI application, using parallel batch reads, a custom buffered reader, and hashing each file during the read instead of in a separate pass.',
+      'Reworked the same application with its original developer so rules are assembled from configurable parts, which let it take on a second, more conditional rule set.',
+      'Deployed the platform to on-premise Windows servers (certificates, database scripts, firewall rules, IIS, Spring Boot services), wrote PowerShell scripts to automate the setup, and debugged configuration and connection issues on client sites.',
     ],
   },
   {
@@ -57,32 +50,23 @@ export const experience: Role[] = [
     company: 'Continental Automotive Singapore',
     title: 'Software Engineer Intern',
     period: 'Jan – Apr 2023',
-    points: [
-      'Built an Angular dashboard for monitoring bus-driver health and performance, with engineers in Germany.',
-    ],
+    points: ['Built an Angular dashboard for monitoring bus-driver health and performance, with engineers in Germany.'],
   },
 ];
 
 export const projects: Project[] = [
   {
     name: 'Spendulu',
-    stack: 'React, TypeScript, Vite, Pyodide, Web Workers · built with Claude Code',
+    stack: 'React, TypeScript, Pyodide, Web Workers · built with Claude Code',
     href: 'https://github.com/zhaaaoo/spendulu',
     summary:
-      'Personal-finance web app for Singapore, where banks offer no consumer API. Reads PDF statements from five local issuers and runs the Python parsing engine in a Web Worker, so statements never leave the device.',
-  },
-  {
-    name: 'browhen',
-    stack: 'Python, SQLAlchemy, Alembic, Postgres, Cloud Run, GitHub Actions · built with Claude Code',
-    href: 'https://github.com/zhaaaoo/browhen',
-    summary:
-      'Telegram bot that finds a day a group chat can meet. The database enforces one open plan per chat, tests check the models against the migrations, and CI runs on every push.',
+      'Personal-finance app that reads PDF bank statements in the browser. The Python parsing engine runs in a Web Worker through Pyodide, so statements never leave the device.',
   },
   {
     name: 'LaparoLymph',
     stack: 'Unity, C#, VR',
     summary:
-      'Final-year VR surgery trainer with Duke-NUS and Singapore General Hospital. Built all the software in a team of seven: anatomy viewer, operating-theatre scene, tool physics, guided procedure and scoring. Demoed to surgeons.',
+      'VR surgical trainer built with Duke-NUS Medical School and Singapore General Hospital for my final-year project. Wrote all of the software in a team of seven; demoed to surgeons.',
   },
 ];
 
@@ -96,13 +80,9 @@ export const certifications = ['Professional Scrum Developer I (PSD I)'];
 export const skills: { group: string; items: string[] }[] = [
   {
     group: 'Frontend',
-    items: ['React', 'TypeScript', 'JavaScript', 'HTML/CSS', 'Redux Toolkit', 'Ant Design', 'Storybook', 'Module Federation', 'Qlik (Nebula.js)', 'Angular'],
+    items: ['React', 'TypeScript', 'JavaScript', 'HTML/CSS', 'Redux Toolkit', 'Ant Design', 'Storybook', 'Module Federation', 'Angular'],
   },
-  { group: 'Backend', items: ['Java', 'Spring Boot', 'Python', 'Ruby on Rails', 'SQL', 'REST APIs', 'Microservices', 'Keycloak/OIDC'] },
+  { group: 'Backend', items: ['Java', 'Spring Boot', 'SQL', 'REST APIs', 'Python'] },
   { group: 'Testing', items: ['Jest', 'React Testing Library', 'JUnit', 'Mockito'] },
-  { group: 'Tools', items: ['Git', 'CI/CD', 'Agile/Scrum', 'Jira', 'Unity', 'C#'] },
+  { group: 'Tools', items: ['Git', 'PowerShell', 'IIS', 'Windows Server'] },
 ];
-
-export const languages = ['English', 'Mandarin'];
-
-export const interests = ['Bouldering', 'diving', 'snowboarding', 'dance'];

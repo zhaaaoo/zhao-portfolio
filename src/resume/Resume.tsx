@@ -1,4 +1,4 @@
-import { certifications, education, experience, interests, languages, profile, projects, skills } from '../content/resume';
+import { certifications, education, experience, profile, projects, skills } from '../content/resume';
 import headshot from '../assets/images/zhao-headshot.jpg';
 
 export default function Resume() {
@@ -7,9 +7,7 @@ export default function Resume() {
       <header className="head">
         <div>
           <h1>{profile.name}</h1>
-          <p className="role">
-            {profile.title} · {profile.location} · {profile.citizenship}
-          </p>
+          <p className="role">{profile.headline.join(' · ')}</p>
           <p className="links">
             {profile.links.map((link) => (
               <a key={link.href} href={link.href}>
@@ -20,8 +18,6 @@ export default function Resume() {
         </div>
         <img className="photo" src={headshot} alt="" width={220} height={275} />
       </header>
-
-      <p className="summary">{profile.summary}</p>
 
       <section>
         <h2>Experience</h2>
@@ -80,9 +76,6 @@ export default function Resume() {
             <strong>{row.group}:</strong> {row.items.join(', ')}
           </p>
         ))}
-        <p>
-          <strong>Languages:</strong> {languages.join(', ')} � <strong>Interests:</strong> {interests.join(', ')}
-        </p>
       </section>
     </main>
   );
