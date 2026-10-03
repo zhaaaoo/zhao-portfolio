@@ -21,7 +21,7 @@ export const profile = {
   location: 'Singapore',
   citizenship: 'Singapore Citizen',
   summary:
-    'Software engineer with two years on a large React and TypeScript micro-frontend platform in the defence sector. Mostly frontend, with backend and deployment work when the project needed it.',
+    'Two years on a large React and TypeScript micro-frontend platform in the defence sector, plus backend and deployment work.',
   links: [
     { label: '081101wangzhao@gmail.com', href: 'mailto:081101wangzhao@gmail.com' },
     { label: 'github.com/zhaaaoo', href: 'https://github.com/zhaaaoo' },
@@ -38,12 +38,13 @@ export const experience: Role[] = [
     context:
       'Logistics platform for a government defence client, built as React micro-frontends over Spring Boot services.',
     points: [
-      'Build pages and components for three of the platform’s micro-frontend apps in React and TypeScript (Module Federation, Redux Toolkit, Zustand, Ant Design), on top of the team’s shared Storybook component library.',
-      'Developed a Spring Boot file-validation service for large, multi-file data sets. Its rules were far more conditional than the first version’s, so split the original data model into smaller pieces that each rule could compose.',
-      'Worked out the read and validation order and added batch parallelism to meet the service’s performance requirements, and updated the architecture documentation with the architect.',
-      'Set up servers and wrote the setup and deployment guides for the platform’s applications; deployed and debugged on client sites.',
-      'Use the client’s approved on-premise AI coding tools for tests and boilerplate (CRUD, model and view-model layers), and maintain the repository’s agent rules and context files.',
-      'Handle production bugs and review teammates’ code.',
+      'Build features for three of the platform’s micro-frontend apps in React and TypeScript (Redux Toolkit, Ant Design, Module Federation), and fix and extend components in the team’s shared Storybook library.',
+      'Built saved table layouts, where each user’s column visibility and order persist to the backend. The team later made it a standard customisation in the design system.',
+      'Worked on embedded Qlik analytics dashboards and on shared features across the platform: help centre, notification centre, landing pages and account management.',
+      'Restructured a Spring Boot file-validation service for a second, more conditional rule set: template-method and factory classes so processing steps can be reordered, and strategy classes for building rules.',
+      'Sped up validation of large multi-file sets with parallel batch reads, and by computing each file’s SHA while reading it line by line, so every file is read once instead of twice.',
+      'Set up on-premise servers, wrote the setup and deployment guides, and deployed and debugged on client sites.',
+      'Use the client’s approved on-premise AI coding tools for tests and boilerplate, and maintain the repository’s agent rules (for example, rules that block circular dependencies).',
     ],
   },
   {
@@ -81,7 +82,7 @@ export const projects: Project[] = [
     name: 'LaparoLymph',
     stack: 'Unity, C#, VR',
     summary:
-      'Final-year project with Duke-NUS Medical School and Singapore General Hospital: a VR trainer for a rare pelvic surgery, paired with a 3D-printed haptic training box. Surgeons reported higher confidence after user testing. Team of seven.',
+      'Final-year VR surgery trainer with Duke-NUS and Singapore General Hospital. Built all the software in a team of seven: anatomy viewer, operating-theatre scene, tool physics, guided procedure and scoring. Demoed to surgeons.',
   },
 ];
 
@@ -95,11 +96,11 @@ export const certifications = ['Professional Scrum Developer I (PSD I)'];
 export const skills: { group: string; items: string[] }[] = [
   {
     group: 'Frontend',
-    items: ['React', 'TypeScript', 'JavaScript', 'HTML/CSS', 'Micro-frontends (Module Federation)', 'Ant Design', 'Storybook', 'Angular'],
+    items: ['React', 'TypeScript', 'JavaScript', 'HTML/CSS', 'Redux Toolkit', 'Ant Design', 'Storybook', 'Module Federation', 'Qlik (Nebula.js)', 'Angular'],
   },
-  { group: 'Backend', items: ['Java', 'Spring Boot', 'Python', 'Ruby on Rails', 'SQL', 'REST APIs', 'Microservices'] },
-  { group: 'Delivery', items: ['Git', 'CI/CD', 'JUnit', 'Mockito', 'Agile/Scrum', 'Jira'] },
-  { group: 'Other', items: ['Unity', 'C#'] },
+  { group: 'Backend', items: ['Java', 'Spring Boot', 'Python', 'Ruby on Rails', 'SQL', 'REST APIs', 'Microservices', 'Keycloak/OIDC'] },
+  { group: 'Testing', items: ['Jest', 'React Testing Library', 'JUnit', 'Mockito'] },
+  { group: 'Tools', items: ['Git', 'CI/CD', 'Agile/Scrum', 'Jira', 'Unity', 'C#'] },
 ];
 
 export const languages = ['English', 'Mandarin'];

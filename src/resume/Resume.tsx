@@ -75,11 +75,14 @@ export default function Resume() {
 
       <section>
         <h2>Skills</h2>
-        {[...skills, { group: 'Languages', items: languages }, { group: 'Interests', items: interests }].map((row) => (
+        {skills.map((row) => (
           <p key={row.group}>
             <strong>{row.group}:</strong> {row.items.join(', ')}
           </p>
         ))}
+        <p>
+          <strong>Languages:</strong> {languages.join(', ')} · <strong>Interests:</strong> {interests.join(', ')}
+        </p>
       </section>
     </main>
   );
