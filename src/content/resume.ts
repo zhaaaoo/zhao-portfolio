@@ -33,11 +33,10 @@ export const experience: Role[] = [
     period: 'Jul 2024 – Present',
     context: 'Logistics management platform for a government defence client: React micro-frontends over Spring Boot.',
     points: [
-      'Build features in React and TypeScript (Redux Toolkit, Ant Design) across several micro-frontend apps, including pages built around embedded Qlik dashboards.',
-      'Built and extended several reusable components in the team’s shared Storybook library, including new features for the shared data table.',
-      'Cut validation of a 1 GB file set from about an hour to about 15 minutes in a Spring Boot CLI application by redesigning how files are read and processed, including parallel batch reads and a custom buffered reader.',
-      'Reworked the same application with its original developer so rules are assembled from configurable parts, which let it take on a second, more conditional rule set.',
-      'Deployed the platform to on-premise Windows servers: configured IIS, TLS certificates, database access and firewall rules, moved the backend services from NSSM to WinSW, and automated the setup with PowerShell. Debugged configuration and connectivity issues on client sites.',
+      'Build features in React and TypeScript (Redux Toolkit, Ant Design) across several micro-frontend apps, including pages built around embedded Qlik dashboards, plus light backend debugging and data preparation on the Spring Boot side.',
+      'Built and extended several reusable React components in the team’s shared Storybook library, such as paginated, user-configurable tables.',
+      'Cut validation of a 1 GB file set from about an hour to about 15 minutes in a Spring Boot CLI application, and reworked it with its original developer so rules are configurable parts, letting it take a second, more conditional rule set.',
+      'Deployed the platform to Windows servers at the client’s military camps: configured IIS, TLS certificates, database access and firewall rules, moved the backend services from NSSM to WinSW, and automated the setup with PowerShell. Debugged configuration and connectivity issues on site.',
     ],
   },
   {
@@ -57,10 +56,10 @@ export const experience: Role[] = [
 export const projects: Project[] = [
   {
     name: 'Spendulu',
-    stack: 'React, TypeScript, Python, local LLM · built with Claude Code',
+    stack: 'React, TypeScript, Python, LLM API · built with Claude Code',
     href: 'https://github.com/zhaaaoo/spendulu',
     summary:
-      'Expense tracker for Singapore, where banks have no open-banking API. Imports PDF statements from five local issuers and uses a local LLM to categorise unfamiliar shops, without ever letting it change an amount.',
+      'Expense tracker for Singapore, where banks have no open-banking API. Imports PDF statements from five local issuers and asks an LLM to categorise unfamiliar shops, sending only the merchant name.',
   },
   {
     name: 'LaparoLymph',
@@ -80,7 +79,7 @@ export const certifications = ['Professional Scrum Developer I (PSD I)'];
 export const skills: { group: string; items: string[] }[] = [
   {
     group: 'Frontend',
-    items: ['React', 'TypeScript', 'JavaScript', 'HTML/CSS', 'Redux Toolkit', 'Ant Design', 'Storybook', 'Module Federation', 'Angular'],
+    items: ['React', 'TypeScript', 'JavaScript', 'HTML/CSS', 'Redux Toolkit', 'Ant Design', 'Storybook', 'Angular'],
   },
   { group: 'Backend', items: ['Java', 'Spring Boot', 'SQL', 'REST APIs', 'Python'] },
   { group: 'Testing', items: ['Jest', 'React Testing Library', 'JUnit', 'Mockito'] },
