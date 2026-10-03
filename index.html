@@ -3,14 +3,29 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Wang Zhao, software engineer in Singapore. React and TypeScript." />
+    <title>Wang Zhao, software engineer</title>
+    <meta name="description" content="Wang Zhao, software engineer in Singapore. React and TypeScript on a large micro-frontend platform, plus backend and deployment work." />
+    <meta property="og:title" content="Wang Zhao, software engineer" />
+    <meta property="og:description" content="React and TypeScript on a large micro-frontend platform, plus backend and deployment work." />
+    <meta property="og:url" content="https://wangzhao.netlify.app" />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1b1d24" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/logo192.png" />
     <link rel="manifest" href="/manifest.json" />
-    <title>Wang Zhao</title>
+    <script>
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      } catch {
+        document.documentElement.dataset.theme = 'light';
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>This site needs JavaScript. The <a href="/wang-zhao-resume.pdf">resume PDF</a> works without it.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
