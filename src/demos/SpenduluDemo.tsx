@@ -58,7 +58,7 @@ export default function SpenduluDemo() {
           <table className={styles.rows}>
             <caption className="visually-hidden">Transactions read from the sample statement</caption>
             <tbody>
-              {result.rows.map((row) => (
+              {result.rows.slice(0, 6).map((row) => (
                 <tr key={row.date + row.shop}>
                   <td className="mono muted">{row.date}</td>
                   <td>{row.shop}</td>
@@ -69,6 +69,15 @@ export default function SpenduluDemo() {
                 </tr>
               ))}
             </tbody>
+            {result.rows.length > 6 && (
+              <tfoot>
+                <tr>
+                  <td colSpan={4} className="mono muted">
+                    + {result.rows.length - 6} more rows
+                  </td>
+                </tr>
+              </tfoot>
+            )}
           </table>
 
           {totals.length > 0 && (

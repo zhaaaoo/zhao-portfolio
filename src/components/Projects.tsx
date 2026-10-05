@@ -1,6 +1,7 @@
-import { Suspense, useEffect, useRef, useState, type ComponentType } from 'react';
+import { Suspense, useEffect, useRef, useState, type CSSProperties, type ComponentType } from 'react';
 import { siteProjects, type ProjectId } from '../content/site';
 import { Part, lazyPart } from '../inspect';
+import Window from './Window';
 import poster from '../assets/images/laparolymph-poster.webp';
 
 const demos: Partial<Record<ProjectId, [string, ComponentType]>> = {
@@ -8,6 +9,8 @@ const demos: Partial<Record<ProjectId, [string, ComponentType]>> = {
   browhen: ['BrowhenDemo', lazyPart('BrowhenDemo', () => import('../demos/BrowhenDemo'))],
   'powder-ping': ['PowderPingDemo', lazyPart('PowderPingDemo', () => import('../demos/PowderPingDemo'))],
 };
+
+const tones = ['mint', 'butter', 'lilac', 'pink'] as const;
 
 function useNear<T extends Element>() {
   const ref = useRef<T>(null);
@@ -40,7 +43,14 @@ function Poster() {
   return (
     <figure className="poster">
       <div className="poster-frame" data-mine={mine || undefined}>
-        <img src={poster} alt="LaparoLymph capstone poster: software features on the left, the physical training box on the right." width={1100} height={1557} loading="lazy" decoding="async" />
+        <img
+          src={poster}
+          alt="LaparoLymph capstone poster: software features on the left, the physical training box on the right."
+          width={1100}
+          height={1557}
+          loading="lazy"
+          decoding="async"
+        />
         <span className="poster-hardware" aria-hidden="true" />
       </div>
       <figcaption>
@@ -55,26 +65,28 @@ function Poster() {
 
 export default function Projects() {
   return (
-    <div className="projects">
-      {siteProjects.map((p) => {
+    <ol className="projects">
+      {siteProjects.map((p, i) => {
         const demo = demos[p.id];
         return (
-          <article key={p.id} className="project" aria-labelledby={`${p.id}-name`}>
-            <header className="project-head">
-              <h3 id={`${p.id}-name`}>
-                {p.href ? <a href={p.href}>{p.name}</a> : p.name}
-              </h3>
-              <span className="mono muted">{p.year}</span>
-              <span className="mono muted project-stack">{p.stack}</span>
-            </header>
-            <p>{p.why}</p>
-            <p>{p.how}</p>
-            {p.note && <p className="mono muted">{p.note}</p>}
-            {demo && <Demo name={demo[0]} Component={demo[1]} />}
-            {p.id === 'laparolymph' && <Poster />}
-          </article>
+          <li key={p.id} className="project" style={{ '--i': i, '--n': siteProjects.length } as CSSProperties}>
+            <Window title={demo ? `${p.id}.app` : p.id} tone={tones[i % tones.length]} aria-labelledby={`${p.id}-name`} role="group">
+              <div className="project-text">
+                <header className="project-head">
+                  <h3 id={`${p.id}-name`}>{p.href ? <a href={p.href}>{p.name}</a> : p.name}</h3>
+                  <span className="mono muted">{p.year}</span>
+                </header>
+                <p className="mono muted">{p.stack}</p>
+                <p>{p.why}</p>
+                <p>{p.how}</p>
+                {p.note && <p className="mono muted">{p.note}</p>}
+              </div>
+              {demo && <Demo name={demo[0]} Component={demo[1]} />}
+              {p.id === 'laparolymph' && <Poster />}
+            </Window>
+          </li>
         );
       })}
-    </div>
+    </ol>
   );
 }

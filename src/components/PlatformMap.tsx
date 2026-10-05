@@ -1,4 +1,4 @@
-import { useId, useMemo, useState, useSyncExternalStore } from 'react';
+import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { platformNodes, stops, type NodeId, type Stop } from '../content/site';
 import styles from './PlatformMap.module.css';
 
@@ -66,23 +66,47 @@ const last = now.getFullYear() * 12 + now.getMonth();
 const endOf = (s: Stop) => (s.end ? toIndex(s.end) : last);
 const isActive = (s: Stop, i: number) => toIndex(s.start) <= i && i <= endOf(s);
 
-const narrowQuery = '(max-width: 40rem)';
-function useNarrow() {
+function useMedia(query: string) {
   return useSyncExternalStore(
     (cb) => {
-      const mq = matchMedia(narrowQuery);
+      const mq = matchMedia(query);
       mq.addEventListener('change', cb);
       return () => mq.removeEventListener('change', cb);
     },
-    () => matchMedia(narrowQuery).matches,
+    () => matchMedia(query).matches,
   );
 }
+
+// pinned: the section sticks while the page scrolls, and scroll position picks the month
+const pinnedQuery = '(min-width: 64rem) and (min-height: 44rem) and (prefers-reduced-motion: no-preference)';
 
 const centre = (b: Box) => ({ x: b.x + W / 2, y: b.y + H / 2 });
 
 export default function PlatformMap() {
-  const layout = useNarrow() ? narrow : wide;
+  const layout = useMedia('(max-width: 40rem)') ? narrow : wide;
+  const pinned = useMedia(pinnedQuery);
   const [month, setMonth] = useState(last);
+  const track = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!pinned) return;
+    const onScroll = () => {
+      const rect = track.current!.getBoundingClientRect();
+      const progress = Math.min(1, Math.max(0, -rect.top / (rect.height - innerHeight)));
+      setMonth(first + Math.round(progress * (last - first)));
+    };
+    onScroll();
+    addEventListener('scroll', onScroll, { passive: true });
+    return () => removeEventListener('scroll', onScroll);
+  }, [pinned]);
+
+  // when pinned, scroll position is the source of truth, so controls move the page instead
+  const pick = (m: number, behavior: ScrollBehavior) => {
+    if (!pinned) return setMonth(m);
+    const rect = track.current!.getBoundingClientRect();
+    const top = scrollY + rect.top + ((m - first) / (last - first)) * (rect.height - innerHeight);
+    scrollTo({ top, behavior });
+  };
   const active = stops.filter((s) => isActive(s, month));
   const lit = new Set(active.flatMap((s) => s.nodes));
   const latest = active.at(-1);
@@ -105,94 +129,101 @@ export default function PlatformMap() {
   const [vw, vh] = layout.size;
 
   return (
-    <div className={styles.map}>
-      <svg viewBox={`0 0 ${vw} ${vh}`} className={styles.diagram} role="img" aria-label="Diagram of the platform: a shell app with feature micro-frontends, a component library and analytics on the frontend; services, a file validation service, a packet receiver and on-premise servers behind them. Parts I worked on in the selected month are highlighted.">
-        <line x1={0} x2={vw} y1={layout.divider} y2={layout.divider} className={styles.divider} />
-        <text x={4} y={layout.at.shell.y + 12} className={styles.zone}>
-          frontend
-        </text>
-        <text x={4} y={layout.divider + 18} className={styles.zone}>
-          backend & infrastructure
-        </text>
-        {edges.map(([a, b]) => {
-          const p = centre(layout.at[a]);
-          const q = centre(layout.at[b]);
-          return <line key={a + b} x1={p.x} y1={p.y} x2={q.x} y2={q.y} className={styles.edge} />;
-        })}
-        <path d={path} className={styles.route} pathLength={1} />
-        {platformNodes.map((node) => {
-          const { x, y } = layout.at[node.id];
-          return (
-            <g key={node.id} className={styles.node} data-lit={lit.has(node.id) || undefined}>
-              <rect x={x} y={y} width={W} height={H} rx={3} />
-              <text x={x + 12} y={y + 22} className={styles.nodeLabel}>
-                {node.label}
-              </text>
-              <text x={x + 12} y={y + 40} className={styles.nodeSub}>
-                {node.sub}
-              </text>
-            </g>
-          );
-        })}
-        {marker && (
-          <circle r={7} className={styles.marker} style={{ transform: `translate(${marker.x + W - 12}px, ${marker.y + 12}px)` }} />
-        )}
-      </svg>
+    <div ref={track} className={pinned ? styles.track : undefined} style={pinned ? { height: `${stops.length * 75}vh` } : undefined}>
+      <div className={pinned ? `${styles.map} ${styles.pinned}` : styles.map}>
+        <svg
+          viewBox={`0 0 ${vw} ${vh}`}
+          className={styles.diagram}
+          role="img"
+          aria-label="Diagram of the platform: a shell app with feature micro-frontends, a component library and analytics on the frontend; services, a file validation service, a packet receiver and on-premise servers behind them. Parts I worked on in the selected month are highlighted."
+        >
+          <line x1={0} x2={vw} y1={layout.divider} y2={layout.divider} className={styles.divider} />
+          <text x={4} y={layout.at.shell.y + 12} className={styles.zone}>
+            frontend
+          </text>
+          <text x={4} y={layout.divider + 18} className={styles.zone}>
+            backend & infrastructure
+          </text>
+          {edges.map(([a, b]) => {
+            const p = centre(layout.at[a]);
+            const q = centre(layout.at[b]);
+            return <line key={a + b} x1={p.x} y1={p.y} x2={q.x} y2={q.y} className={styles.edge} />;
+          })}
+          <path d={path} className={styles.route} pathLength={1} />
+          {platformNodes.map((node) => {
+            const { x, y } = layout.at[node.id];
+            return (
+              <g key={node.id} className={styles.node} data-lit={lit.has(node.id) || undefined}>
+                <rect x={x} y={y} width={W} height={H} rx={8} />
+                <text x={x + 12} y={y + 22} className={styles.nodeLabel}>
+                  {node.label}
+                </text>
+                <text x={x + 12} y={y + 40} className={styles.nodeSub}>
+                  {node.sub}
+                </text>
+              </g>
+            );
+          })}
+          {marker && (
+            <circle r={7} className={styles.marker} style={{ transform: `translate(${marker.x + W - 12}px, ${marker.y + 12}px)` }} />
+          )}
+        </svg>
 
-      <div className={styles.scrubber}>
-        <label htmlFor={`${detailId}-range`} className="mono">
-          Drag through time
-        </label>
-        <input
-          id={`${detailId}-range`}
-          type="range"
-          min={first}
-          max={last}
-          value={month}
-          onChange={(e) => setMonth(Number(e.target.value))}
-          aria-valuetext={`${label(month)}: ${active.map((s) => s.role).join(', ') || 'no project'}`}
-          aria-controls={detailId}
-        />
-        <output className="mono">{label(month)}</output>
-      </div>
+        <div className={styles.scrubber}>
+          <label htmlFor={`${detailId}-range`} className="mono">
+            {pinned ? 'Scroll or drag through time' : 'Drag through time'}
+          </label>
+          <input
+            id={`${detailId}-range`}
+            type="range"
+            min={first}
+            max={last}
+            value={month}
+            onChange={(e) => pick(Number(e.target.value), 'instant')}
+            aria-valuetext={`${label(month)}: ${active.map((s) => s.role).join(', ') || 'no project'}`}
+            aria-controls={detailId}
+          />
+          <output className="mono">{label(month)}</output>
+        </div>
 
-      <ol className={styles.stops}>
-        {stops.map((s) => (
-          <li key={s.id}>
-            <button
-              type="button"
-              className={styles.stop}
-              aria-pressed={isActive(s, month)}
-              onClick={() => setMonth(toIndex(s.start))}
-            >
-              <span className="mono muted">
-                {s.startLabel ?? label(toIndex(s.start))} – {s.end ? label(toIndex(s.end)) : 'now'}
-              </span>
-              <span>{s.role}</span>
-            </button>
-          </li>
-        ))}
-      </ol>
+        <ol className={styles.stops}>
+          {stops.map((s) => (
+            <li key={s.id}>
+              <button
+                type="button"
+                className={styles.stop}
+                aria-pressed={isActive(s, month)}
+                onClick={() => pick(toIndex(s.start), 'smooth')}
+              >
+                <span className="mono muted">
+                  {s.startLabel ?? label(toIndex(s.start))} – {s.end ? label(toIndex(s.end)) : 'now'}
+                </span>
+                <span>{s.role}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
 
-      <div id={detailId} className={styles.detail} aria-live="polite">
-        {active.map((s) => (
-          <article key={s.id}>
-            <h3>{s.role}</h3>
-            <p>{s.did}</p>
-            {s.hard && (
-              <p>
-                <span className="mono muted">Hard part </span>
-                {s.hard}
-              </p>
-            )}
-            {s.changed && (
-              <p>
-                <span className="mono muted">What I did about it </span>
-                {s.changed}
-              </p>
-            )}
-          </article>
-        ))}
+        <div id={detailId} className={styles.detail} aria-live="polite">
+          {active.map((s) => (
+            <article key={s.id}>
+              <h3>{s.role}</h3>
+              <p>{s.did}</p>
+              {s.hard && (
+                <p>
+                  <span className="mono muted">Hard part </span>
+                  {s.hard}
+                </p>
+              )}
+              {s.changed && (
+                <p>
+                  <span className="mono muted">What I did about it </span>
+                  {s.changed}
+                </p>
+              )}
+            </article>
+          ))}
+        </div>
       </div>
     </div>
   );

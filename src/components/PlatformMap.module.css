@@ -54,15 +54,19 @@
 
 .node rect {
   fill: var(--paper);
-  stroke: var(--ink-2);
-  stroke-width: 1;
+  stroke: var(--frame);
+  stroke-width: 1.5;
   transition: fill 250ms var(--ease-out), stroke 250ms var(--ease-out);
 }
 
 .node[data-lit] rect {
-  fill: var(--signal-soft);
-  stroke: var(--signal);
-  stroke-width: 2;
+  fill: var(--pink);
+  stroke: var(--frame);
+  stroke-width: 2.5;
+}
+
+.node[data-lit] text {
+  fill: var(--bar-ink);
 }
 
 .nodeLabel {
@@ -113,8 +117,9 @@
   width: 100%;
   height: 100%;
   padding: 0.6rem 0.75rem;
-  border: 1px solid var(--rule);
-  background: none;
+  border: 1.5px solid var(--frame);
+  border-radius: 8px;
+  background: var(--paper);
   text-align: left;
   transition: border-color 150ms, background 150ms;
 }
@@ -124,8 +129,12 @@
 }
 
 .stop[aria-pressed='true'] {
-  border-color: var(--signal);
-  background: var(--signal-soft);
+  background: var(--pink);
+  color: var(--bar-ink);
+}
+
+.stop[aria-pressed='true'] :global(.muted) {
+  color: var(--bar-ink);
 }
 
 .detail {
@@ -151,4 +160,50 @@
   .scrubber label {
     grid-column: 1 / -1;
   }
+}
+
+.track {
+  position: relative;
+  clear: both;
+}
+
+.pinned {
+  position: sticky;
+  top: calc(var(--menubar) + 1rem);
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  grid-template-areas:
+    'diagram detail'
+    'scrubber detail'
+    'stops detail';
+  align-content: start;
+  column-gap: 2rem;
+  max-height: calc(100vh - var(--menubar) - 2rem);
+}
+
+.pinned .diagram {
+  grid-area: diagram;
+  max-height: 55vh;
+}
+
+.pinned .scrubber {
+  grid-area: scrubber;
+}
+
+.pinned .stops {
+  grid-area: stops;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.35rem;
+}
+
+.pinned .stop {
+  padding: 0.35rem 0.55rem;
+  font-size: var(--step--1);
+}
+
+.pinned .detail {
+  grid-area: detail;
+  align-self: start;
+  max-height: calc(100vh - var(--menubar) - 3rem);
+  overflow: auto;
+  font-size: var(--step--1);
 }

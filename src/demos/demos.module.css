@@ -8,7 +8,8 @@
   display: grid;
   gap: 1rem;
   padding: 1rem;
-  border: 1px solid var(--rule);
+  border: 1.5px solid var(--frame);
+  border-radius: 10px;
   background: var(--paper-2);
 }
 
@@ -16,9 +17,9 @@
   justify-self: start;
   max-width: 28rem;
   padding: 0.6rem 0.85rem;
-  border-radius: 0.9rem 0.9rem 0.9rem 0.2rem;
+  border: 1.5px solid var(--frame);
+  border-radius: 1rem 1rem 1rem 0.25rem;
   background: var(--paper);
-  box-shadow: 0 1px 0 var(--rule);
 }
 
 .line {
@@ -36,7 +37,8 @@
 .day {
   position: relative;
   aspect-ratio: 1;
-  border: 1px solid var(--rule);
+  border: 1.5px solid var(--frame);
+  border-radius: 8px;
   background: var(--paper);
   font-family: var(--mono);
   transition: transform 300ms var(--spring), background 150ms;
@@ -47,8 +49,8 @@
 }
 
 .day[aria-pressed='true'] {
-  border-color: var(--signal);
-  background: var(--signal-soft);
+  background: var(--pink);
+  color: var(--bar-ink);
 }
 
 .day[data-locked] {
@@ -141,8 +143,10 @@
 }
 
 .bar {
-  block-size: 0.6rem;
-  background: var(--signal);
+  block-size: 0.7rem;
+  border: 1.5px solid var(--frame);
+  border-radius: 999px;
+  background: var(--pink);
   transition: inline-size 600ms var(--spring);
 }
 
@@ -161,7 +165,8 @@
 .form select,
 .form input {
   padding: 0.35rem 0.5rem;
-  border: 1px solid var(--rule);
+  border: 1.5px solid var(--frame);
+  border-radius: 8px;
   background: var(--paper);
 }
 

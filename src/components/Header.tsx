@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Part } from '../inspect';
 
 export const sections = [
@@ -7,6 +8,17 @@ export const sections = [
   { id: 'earlier', title: 'Earlier' },
   { id: 'colophon', title: 'This site' },
 ];
+
+const clock = new Intl.DateTimeFormat('en-SG', { weekday: 'short', hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Singapore' });
+
+function Clock() {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 30_000);
+    return () => clearInterval(id);
+  }, []);
+  return <span className="mono muted topbar-clock">{clock.format(now)} in Singapore</span>;
+}
 
 type Props = {
   theme: string;
@@ -29,6 +41,7 @@ export default function Header({ theme, onTheme, inspecting, onInspect }: Props)
         ))}
       </nav>
       <div className="topbar-tools">
+        <Clock />
         <button type="button" className="button" onClick={onTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
           {theme === 'dark' ? 'Light' : 'Dark'}
         </button>

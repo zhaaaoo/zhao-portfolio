@@ -5,6 +5,7 @@ import Section from './components/Section';
 import PlatformMap from './components/PlatformMap';
 import Projects from './components/Projects';
 import InspectDrawer from './components/InspectDrawer';
+import Window from './components/Window';
 import { Part } from './inspect';
 import { intro, notes } from './content/site';
 import { certifications, education, experience, skills } from './content/resume';
@@ -83,39 +84,49 @@ export default function App() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
+      <div className="ribbon" aria-hidden="true" />
       <Header theme={theme} onTheme={toggleTheme} inspecting={inspecting} onInspect={() => setInspecting((v) => !v)} />
 
       <main id="main">
         <Part name="Intro" as="section" id="top" className="intro" aria-label="Introduction">
-          <div>
-            <h1>Wang Zhao</h1>
-            <p className="intro-line">{intro.line}</p>
-            <p className="mono muted">{intro.open}</p>
-            <p className="intro-links">
-              <a className="button" data-variant="signal" href="/wang-zhao-resume.pdf">
-                Resume (PDF)
-              </a>
-              <button type="button" className="button" onClick={copyEmail}>
-                {copied ? 'Copied' : 'Copy email'}
-              </button>
-              <a href="https://github.com/zhaaaoo">GitHub</a>
-              <a href="https://www.linkedin.com/in/wangzhao-wz/">LinkedIn</a>
-            </p>
-            <p className="visually-hidden" aria-live="polite">
-              {copied ? 'Email address copied' : ''}
-            </p>
-          </div>
-          <img className="intro-photo" src={photo} alt="Wang Zhao" width={960} height={1280} fetchPriority="high" />
+          <Window title="wangzhao.app">
+            <div>
+              <h1>Wang Zhao</h1>
+              <p className="intro-line">{intro.line}</p>
+              <p className="mono muted">{intro.open}</p>
+              <p className="intro-links">
+                <a className="button" data-variant="signal" href="/wang-zhao-resume.pdf">
+                  Resume (PDF)
+                </a>
+                <button type="button" className="button" onClick={copyEmail}>
+                  {copied ? 'Copied' : 'Copy email'}
+                </button>
+                <a href="https://github.com/zhaaaoo">GitHub</a>
+                <a href="https://www.linkedin.com/in/wangzhao-wz/">LinkedIn</a>
+              </p>
+              <p className="visually-hidden" aria-live="polite">
+                {copied ? 'Email address copied' : ''}
+              </p>
+            </div>
+            <figure className="polaroid">
+              <img src={photo} alt="Wang Zhao" width={960} height={1280} fetchPriority="high" />
+              <figcaption className="mono muted">zhao</figcaption>
+            </figure>
+          </Window>
         </Part>
 
         <Section
           id="work"
           n={1}
           title="Work"
+          file="platform.map"
           note={
             <>
               <p>NCS, Software Engineer, Jul 2024 – now.</p>
-              <p>The project is for a defence client, so the diagram is kept general. Drag the slider or pick a stop to see what I was working on.</p>
+              <p>
+                The project is for a defence client, so the diagram is kept general. Scroll, drag the slider or pick a stop to see what I
+                was working on.
+              </p>
             </>
           }
         >
@@ -124,11 +135,18 @@ export default function App() {
           </Part>
         </Section>
 
-        <Section id="projects" n={2} title="Projects" note={<p>Side projects I built with Claude Code, plus my final-year project. The demos are small rebuilds, not the real apps.</p>}>
+        <Section
+          id="projects"
+          n={2}
+          title="Projects"
+          file="projects"
+          tone="lilac"
+          note={<p>Side projects I built with Claude Code, plus my final-year project. The demos are small rebuilds, not the real apps.</p>}
+        >
           <Projects />
         </Section>
 
-        <Section id="notes" n={3} title="How I work">
+        <Section id="notes" n={3} title="How I work" file="notes.txt" tone="mint">
           <div className="notes">
             {notes.map((n) => (
               <article key={n.title}>
@@ -141,13 +159,19 @@ export default function App() {
             {skills.map((row) => (
               <div key={row.group}>
                 <dt className="mono muted">{row.group}</dt>
-                <dd>{row.items.join(', ')}</dd>
+                <dd>
+                  {row.items.map((item) => (
+                    <span key={item} className="chip">
+                      {item}
+                    </span>
+                  ))}
+                </dd>
               </div>
             ))}
           </dl>
         </Section>
 
-        <Section id="earlier" n={4} title="Earlier">
+        <Section id="earlier" n={4} title="Earlier" file="earlier.txt" tone="butter">
           <ul className="plain-list">
             {experience.slice(1).map((role) => (
               <li key={role.company + role.title}>
@@ -170,9 +194,12 @@ export default function App() {
           </ul>
         </Section>
 
-        <Section id="colophon" n={5} title="This site">
+        <Section id="colophon" n={5} title="This site" file="readme.md" tone="mint">
           <ul className="plain-list">
-            <li>React 19 and TypeScript, built with Vite. Plain CSS with custom properties; no UI kit or animation library.</li>
+            <li>
+              React 19 and TypeScript, built with Vite. Plain CSS with custom properties; no UI kit or animation library. The scroll effects
+              are CSS scroll-driven animations, plus one scroll listener for the timeline.
+            </li>
             <li>Type is Atkinson Hyperlegible Next and Mono, from the Braille Institute, picked for legibility.</li>
             <li>
               JavaScript loaded so far: <ScriptWeight />. The demos only load when you scroll near them.
@@ -200,24 +227,28 @@ export default function App() {
       {inspecting && <InspectDrawer onClose={() => setInspecting(false)} />}
 
       <dialog ref={help} className="help" aria-labelledby="help-title">
-        <h2 id="help-title">Shortcuts</h2>
-        <dl>
-          <dt>
-            <kbd>i</kbd>
-          </dt>
-          <dd>Inspect: outline components and show render counts</dd>
-          <dt>
-            <kbd>t</kbd>
-          </dt>
-          <dd>Switch theme</dd>
-          <dt>
-            <kbd>?</kbd>
-          </dt>
-          <dd>This list</dd>
-        </dl>
-        <form method="dialog">
-          <button className="button">Close</button>
-        </form>
+        <Window title="shortcuts" tone="butter">
+          <h2 id="help-title" className="visually-hidden">
+            Shortcuts
+          </h2>
+          <dl>
+            <dt>
+              <kbd>i</kbd>
+            </dt>
+            <dd>Inspect: outline components and show render counts</dd>
+            <dt>
+              <kbd>t</kbd>
+            </dt>
+            <dd>Switch theme</dd>
+            <dt>
+              <kbd>?</kbd>
+            </dt>
+            <dd>This list</dd>
+          </dl>
+          <form method="dialog">
+            <button className="button">Close</button>
+          </form>
+        </Window>
       </dialog>
     </>
   );
