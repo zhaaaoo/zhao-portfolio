@@ -41,19 +41,21 @@ export default function Header({ nav, plain, canDesk, onView, theme, onTheme, in
       <a href="#top" className="topbar-name">
         Wang Zhao
       </a>
-      <nav aria-label="Sections" className="topbar-nav">
-        {nav.map((item) =>
-          item.href ? (
-            <a key={item.label} href={item.href} className="mono">
-              {item.label}
-            </a>
-          ) : (
-            <button key={item.label} type="button" className="mono topbar-link" onClick={item.onClick}>
-              {item.label}
-            </button>
-          ),
-        )}
-      </nav>
+      {nav.length > 0 && (
+        <nav aria-label="Sections" className="topbar-nav">
+          {nav.map((item) =>
+            item.href ? (
+              <a key={item.label} href={item.href} className="mono">
+                {item.label}
+              </a>
+            ) : (
+              <button key={item.label} type="button" className="mono topbar-link" onClick={item.onClick}>
+                {item.label}
+              </button>
+            ),
+          )}
+        </nav>
+      )}
       <div className="topbar-tools">
         <Clock />
         <a className="button" data-variant="signal" href="/wang-zhao-resume.pdf">

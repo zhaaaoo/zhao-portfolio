@@ -12,9 +12,21 @@ import { meta, type Desktop as DesktopApi, type ObjectId, type Win, type WinId }
 
 const DeskScene = lazy(() => import('./DeskScene'));
 
+const dock: { id: WinId; label: string; glyph: string; tone: string }[] = [
+  { id: 'about', label: 'About', glyph: '♡', tone: 'var(--lilac)' },
+  { id: 'work', label: 'Work', glyph: '▤', tone: 'var(--mint)' },
+  { id: 'projects', label: 'Projects', glyph: '▣', tone: 'var(--pink)' },
+  { id: 'notes', label: 'Notes', glyph: '✎', tone: 'var(--butter)' },
+  { id: 'earlier', label: 'Earlier', glyph: '✦', tone: 'var(--lilac)' },
+  { id: 'stickers', label: 'Stickers', glyph: '★', tone: 'var(--pink)' },
+  { id: 'terminal', label: 'Terminal', glyph: '>_', tone: 'var(--mint)' },
+  { id: 'site', label: 'Readme', glyph: '?', tone: 'var(--butter)' },
+];
+
 const objectWindow: Record<ObjectId, WinId> = {
   globe: 'welcome',
   laptop: 'projects',
+  keyboard: 'terminal',
   server: 'work',
   polaroid: 'about',
   notes: 'notes',
@@ -89,7 +101,9 @@ export default function Desktop({ desktop, theme, onTheme, onPlain }: Props) {
         return (
           <>
             <IntroText heading={false} />
-            <p className="muted desk-hint">Click things on the desk, or use the menu. Prefer a normal page? Use Plain view in the menu bar.</p>
+            <p className="muted desk-hint">
+              Click things on the desk, or use the menu. Prefer a normal page? Use Plain view in the menu bar.
+            </p>
           </>
         );
       case 'about':
@@ -155,6 +169,17 @@ export default function Desktop({ desktop, theme, onTheme, onPlain }: Props) {
             </DesktopWindow>
           </Part>
         ))}
+
+        <nav className="dock" aria-label="Sections">
+          {dock.map((d) => (
+            <button key={d.id} type="button" onClick={() => open(d.id)} aria-pressed={wins.some((w) => w.id === d.id)}>
+              <span className="dock-icon" style={{ background: d.tone }} aria-hidden="true">
+                {d.glyph}
+              </span>
+              <span className="dock-label">{d.label}</span>
+            </button>
+          ))}
+        </nav>
 
         <StickerLayer stickers={stickers} onRemove={remove} />
 

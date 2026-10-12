@@ -85,16 +85,7 @@ export default function App() {
         { label: 'Earlier', href: '#earlier' },
         { label: 'This site', href: '#colophon' },
       ]
-    : [
-        { label: 'About', onClick: () => desktop.open('about') },
-        { label: 'Work', onClick: () => desktop.open('work') },
-        { label: 'Projects', onClick: () => desktop.open('projects') },
-        { label: 'Notes', onClick: () => desktop.open('notes') },
-        { label: 'Earlier', onClick: () => desktop.open('earlier') },
-        { label: 'Stickers', onClick: () => desktop.open('stickers') },
-        { label: 'Terminal', onClick: () => desktop.open('terminal') },
-        { label: 'Readme', onClick: () => desktop.open('site') },
-      ];
+    : [];
 
   return (
     <>

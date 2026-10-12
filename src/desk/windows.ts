@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { siteProjects, type ProjectId } from '../content/site';
 import { tones } from '../components/Projects';
 
-export type ObjectId = 'globe' | 'laptop' | 'server' | 'polaroid' | 'notes' | 'books';
+export type ObjectId = 'globe' | 'laptop' | 'keyboard' | 'server' | 'polaroid' | 'notes' | 'books';
 export type WinId = 'welcome' | 'about' | 'work' | 'projects' | 'notes' | 'earlier' | 'site' | 'terminal' | 'stickers' | `project:${ProjectId}`;
 
 type Meta = { title: string; tone: (typeof tones)[number]; object?: ObjectId; width: number };
@@ -20,7 +20,7 @@ export function meta(id: WinId): Meta {
     notes: { title: 'notes.txt', tone: 'butter', object: 'notes', width: 600 },
     earlier: { title: 'earlier.txt', tone: 'butter', object: 'books', width: 520 },
     site: { title: 'readme.md', tone: 'mint', width: 520 },
-    terminal: { title: 'terminal — zsh', tone: 'lilac', width: 560 },
+    terminal: { title: 'terminal — zsh', tone: 'lilac', object: 'keyboard', width: 560 },
     stickers: { title: 'stickers', tone: 'pink', width: 380 },
   };
   return table[id];
