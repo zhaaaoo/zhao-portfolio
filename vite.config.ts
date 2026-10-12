@@ -8,6 +8,8 @@ export default defineConfig({
     alias: [{ find: /^react-dom\/client$/, replacement: 'react-dom/profiling' }],
   },
   build: {
+    // the three.js scene is one lazy chunk loaded after first paint
+    chunkSizeWarningLimit: 1100,
     rollupOptions: {
       input: { main: 'index.html', resume: 'resume/index.html' },
       output: {

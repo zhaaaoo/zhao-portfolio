@@ -1,17 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
-import Header from './components/Header';
-import Section from './components/Section';
-import PlatformMap from './components/PlatformMap';
-import Projects from './components/Projects';
+import Header, { type NavItem } from './components/Header';
 import InspectDrawer from './components/InspectDrawer';
+import PlainPage from './components/PlainPage';
 import Window from './components/Window';
+import { email } from './components/Content';
+import Desktop from './desk/Desktop';
+import { useDesktop } from './desk/windows';
 import { Part } from './inspect';
-import { intro, notes } from './content/site';
-import { certifications, education, experience, skills } from './content/resume';
-import photo from './assets/images/zhao.webp';
-
-const email = '081101wangzhao@gmail.com';
 
 function setTheme(theme: string) {
   document.documentElement.dataset.theme = theme;
@@ -22,24 +18,19 @@ function setTheme(theme: string) {
   }
 }
 
-const isScript = (e: PerformanceEntry) => /\.(js|tsx?)(\?|$)/.test(e.name);
-const kb = (entries: PerformanceEntry[]) =>
-  entries.filter(isScript).reduce((sum, e) => sum + (e as PerformanceResourceTiming).encodedBodySize, 0) / 1024;
-
-function ScriptWeight() {
-  const [total, setTotal] = useState(() => kb(performance.getEntriesByType('resource')));
-  useEffect(() => {
-    const observer = new PerformanceObserver((list) => setTotal((t) => t + kb(list.getEntries())));
-    observer.observe({ type: 'resource' });
-    return () => observer.disconnect();
-  }, []);
-  return <>{total.toFixed(0)} KB</>;
-}
+const hasWebGL = () => {
+  try {
+    return !!document.createElement('canvas').getContext('webgl2');
+  } catch {
+    return false;
+  }
+};
 
 export default function App() {
   const [theme, setThemeState] = useState(() => document.documentElement.dataset.theme ?? 'light');
   const [inspecting, setInspecting] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [plain, setPlain] = useState(() => new URLSearchParams(location.search).has('plain') || !hasWebGL());
+  const desktop = useDesktop();
   const help = useRef<HTMLDialogElement>(null);
 
   const toggleTheme = () => {
@@ -52,10 +43,23 @@ export default function App() {
     else document.startViewTransition(() => flushSync(apply));
   };
 
+  const switchView = (toPlain: boolean) => {
+    const url = new URL(location.href);
+    if (toPlain) url.searchParams.set('plain', '');
+    else url.searchParams.delete('plain');
+    history.replaceState(null, '', url);
+    setPlain(toPlain);
+    scrollTo(0, 0);
+  };
+
   useEffect(() => {
     if (inspecting) document.documentElement.dataset.inspect = '';
     else delete document.documentElement.dataset.inspect;
   }, [inspecting]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('desk-mode', !plain);
+  }, [plain]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -64,165 +68,63 @@ export default function App() {
       if (e.key === 'i') setInspecting((v) => !v);
       else if (e.key === 't') toggleTheme();
       else if (e.key === '?') help.current?.showModal();
+      else if (e.key === '`' && !plain) {
+        e.preventDefault();
+        desktop.open('terminal');
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   });
 
-  const copyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText(email);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      window.location.href = `mailto:${email}`;
-    }
-  };
+  const nav: NavItem[] = plain
+    ? [
+        { label: 'Work', href: '#work' },
+        { label: 'Projects', href: '#projects' },
+        { label: 'How I work', href: '#notes' },
+        { label: 'Earlier', href: '#earlier' },
+        { label: 'This site', href: '#colophon' },
+      ]
+    : [
+        { label: 'About', onClick: () => desktop.open('about') },
+        { label: 'Work', onClick: () => desktop.open('work') },
+        { label: 'Projects', onClick: () => desktop.open('projects') },
+        { label: 'Notes', onClick: () => desktop.open('notes') },
+        { label: 'Earlier', onClick: () => desktop.open('earlier') },
+        { label: 'Stickers', onClick: () => desktop.open('stickers') },
+        { label: 'Terminal', onClick: () => desktop.open('terminal') },
+        { label: 'Readme', onClick: () => desktop.open('site') },
+      ];
 
   return (
     <>
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <div className="ribbon" aria-hidden="true" />
-      <Header theme={theme} onTheme={toggleTheme} inspecting={inspecting} onInspect={() => setInspecting((v) => !v)} />
+      {plain && <div className="ribbon" aria-hidden="true" />}
+      <Header
+        nav={nav}
+        plain={plain}
+        canDesk={hasWebGL()}
+        onView={() => switchView(!plain)}
+        theme={theme}
+        onTheme={toggleTheme}
+        inspecting={inspecting}
+        onInspect={() => setInspecting((v) => !v)}
+      />
 
-      <main id="main">
-        <Part name="Intro" as="section" id="top" className="intro" aria-label="Introduction">
-          <Window title="wangzhao.app">
-            <div>
-              <h1>Wang Zhao</h1>
-              <p className="intro-line">{intro.line}</p>
-              <p className="mono muted">{intro.open}</p>
-              <p className="intro-links">
-                <a className="button" data-variant="signal" href="/wang-zhao-resume.pdf">
-                  Resume (PDF)
-                </a>
-                <button type="button" className="button" onClick={copyEmail}>
-                  {copied ? 'Copied' : 'Copy email'}
-                </button>
-                <a href="https://github.com/zhaaaoo">GitHub</a>
-                <a href="https://www.linkedin.com/in/wangzhao-wz/">LinkedIn</a>
-              </p>
-              <p className="visually-hidden" aria-live="polite">
-                {copied ? 'Email address copied' : ''}
-              </p>
-            </div>
-            <figure className="polaroid">
-              <img src={photo} alt="Wang Zhao" width={960} height={1280} fetchPriority="high" />
-              <figcaption className="mono muted">zhao</figcaption>
-            </figure>
-          </Window>
+      {plain ? <PlainPage /> : <Desktop desktop={desktop} theme={theme} onTheme={toggleTheme} onPlain={() => switchView(true)} />}
+
+      {plain && (
+        <Part name="Footer" as="footer" className="footer">
+          <p>
+            <a href={`mailto:${email}`}>{email}</a>
+            <a href="https://github.com/zhaaaoo">GitHub</a>
+            <a href="https://www.linkedin.com/in/wangzhao-wz/">LinkedIn</a>
+            <a href="https://t.me/zhaaaoo">Telegram</a>
+          </p>
         </Part>
-
-        <Section
-          id="work"
-          n={1}
-          title="Work"
-          file="platform.map"
-          note={
-            <>
-              <p>NCS, Software Engineer, Jul 2024 – now.</p>
-              <p>
-                The project is for a defence client, so the diagram is kept general. Scroll, drag the slider or pick a stop to see what I
-                was working on.
-              </p>
-            </>
-          }
-        >
-          <Part name="PlatformMap">
-            <PlatformMap />
-          </Part>
-        </Section>
-
-        <Section
-          id="projects"
-          n={2}
-          title="Projects"
-          file="projects"
-          tone="lilac"
-          note={<p>Side projects I built with Claude Code, plus my final-year project. The demos are small rebuilds, not the real apps.</p>}
-        >
-          <Projects />
-        </Section>
-
-        <Section id="notes" n={3} title="How I work" file="notes.txt" tone="mint">
-          <div className="notes">
-            {notes.map((n) => (
-              <article key={n.title}>
-                <h3>{n.title}</h3>
-                <p>{n.body}</p>
-              </article>
-            ))}
-          </div>
-          <dl className="skills">
-            {skills.map((row) => (
-              <div key={row.group}>
-                <dt className="mono muted">{row.group}</dt>
-                <dd>
-                  {row.items.map((item) => (
-                    <span key={item} className="chip">
-                      {item}
-                    </span>
-                  ))}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </Section>
-
-        <Section id="earlier" n={4} title="Earlier" file="earlier.txt" tone="butter">
-          <ul className="plain-list">
-            {experience.slice(1).map((role) => (
-              <li key={role.company + role.title}>
-                <strong>
-                  {role.title}, {role.company}
-                </strong>{' '}
-                <span className="mono muted">{role.period}</span>
-                <br />
-                {role.points[0]}
-              </li>
-            ))}
-            {education.map((item) => (
-              <li key={item.school}>
-                <strong>{item.school}</strong> <span className="mono muted">{item.period}</span>
-                <br />
-                {item.detail}
-              </li>
-            ))}
-            <li>{certifications.join(', ')}</li>
-          </ul>
-        </Section>
-
-        <Section id="colophon" n={5} title="This site" file="readme.md" tone="mint">
-          <ul className="plain-list">
-            <li>
-              React 19 and TypeScript, built with Vite. Plain CSS with custom properties; no UI kit or animation library. The scroll effects
-              are CSS scroll-driven animations, plus one scroll listener for the timeline.
-            </li>
-            <li>Type is Atkinson Hyperlegible Next and Mono, from the Braille Institute, picked for legibility.</li>
-            <li>
-              JavaScript loaded so far: <ScriptWeight />. The demos only load when you scroll near them.
-            </li>
-            <li>The resume PDF is printed by Playwright from the same content file as this page.</li>
-            <li>No analytics, no cookies.</li>
-            <li>
-              Press <kbd>i</kbd> to inspect, <kbd>t</kbd> for theme, <kbd>?</kbd> for shortcuts.{' '}
-              <a href="https://github.com/zhaaaoo/zhao-portfolio">Source on GitHub</a>.
-            </li>
-          </ul>
-          <p className="muted">Off screen: bouldering, diving, snowboarding, dance.</p>
-        </Section>
-      </main>
-
-      <Part name="Footer" as="footer" className="footer">
-        <p>
-          <a href={`mailto:${email}`}>{email}</a>
-          <a href="https://github.com/zhaaaoo">GitHub</a>
-          <a href="https://www.linkedin.com/in/wangzhao-wz/">LinkedIn</a>
-          <a href="https://t.me/zhaaaoo">Telegram</a>
-        </p>
-      </Part>
+      )}
 
       {inspecting && <InspectDrawer onClose={() => setInspecting(false)} />}
 
@@ -240,6 +142,14 @@ export default function App() {
               <kbd>t</kbd>
             </dt>
             <dd>Switch theme</dd>
+            <dt>
+              <kbd>`</kbd>
+            </dt>
+            <dd>Open the terminal (desk view)</dd>
+            <dt>
+              <kbd>Esc</kbd>
+            </dt>
+            <dd>Close the front window</dd>
             <dt>
               <kbd>?</kbd>
             </dt>

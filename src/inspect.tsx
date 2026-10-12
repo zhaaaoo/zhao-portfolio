@@ -1,4 +1,4 @@
-import { Profiler, lazy, useSyncExternalStore, type ComponentPropsWithoutRef, type ComponentType } from 'react';
+import { Profiler, lazy, useSyncExternalStore, type ComponentPropsWithRef, type ComponentType } from 'react';
 
 export type PartStat = { renders: number; lastMs: number; chunk?: { kb: number | null; ms: number } };
 
@@ -42,7 +42,7 @@ function onRender(id: string, _phase: string, actualDuration: number) {
   emit();
 }
 
-type PartProps = ComponentPropsWithoutRef<'div'> & {
+type PartProps = ComponentPropsWithRef<'div'> & {
   name: string;
   as?: 'div' | 'section' | 'header' | 'footer' | 'figure';
 };

@@ -1,6 +1,7 @@
 import { Suspense, useEffect, useRef, useState, type CSSProperties, type ComponentType } from 'react';
 import { siteProjects, type ProjectId } from '../content/site';
 import { Part, lazyPart } from '../inspect';
+import { useHighlight } from '../highlight';
 import Window from './Window';
 import poster from '../assets/images/laparolymph-poster.webp';
 
@@ -10,7 +11,7 @@ const demos: Partial<Record<ProjectId, [string, ComponentType]>> = {
   'powder-ping': ['PowderPingDemo', lazyPart('PowderPingDemo', () => import('../demos/PowderPingDemo'))],
 };
 
-const tones = ['mint', 'butter', 'lilac', 'pink'] as const;
+export const tones = ['mint', 'butter', 'lilac', 'pink'] as const;
 
 function useNear<T extends Element>() {
   const ref = useRef<T>(null);
@@ -63,30 +64,44 @@ function Poster() {
   );
 }
 
+type Project = (typeof siteProjects)[number];
+
+export function ProjectBody({ project: p }: { project: Project }) {
+  const demo = demos[p.id];
+  return (
+    <>
+      <div className="project-text">
+        <header className="project-head">
+          <h3 id={`${p.id}-name`}>{p.href ? <a href={p.href}>{p.name}</a> : p.name}</h3>
+          <span className="mono muted">{p.year}</span>
+        </header>
+        <p className="mono muted">{p.stack}</p>
+        <p>{p.why}</p>
+        <p>{p.how}</p>
+        {p.note && <p className="mono muted">{p.note}</p>}
+      </div>
+      {demo && <Demo name={demo[0]} Component={demo[1]} />}
+      {p.id === 'laparolymph' && <Poster />}
+    </>
+  );
+}
+
 export default function Projects() {
+  const skill = useHighlight();
   return (
     <ol className="projects">
-      {siteProjects.map((p, i) => {
-        const demo = demos[p.id];
-        return (
-          <li key={p.id} className="project" style={{ '--i': i, '--n': siteProjects.length } as CSSProperties}>
-            <Window title={demo ? `${p.id}.app` : p.id} tone={tones[i % tones.length]} aria-labelledby={`${p.id}-name`} role="group">
-              <div className="project-text">
-                <header className="project-head">
-                  <h3 id={`${p.id}-name`}>{p.href ? <a href={p.href}>{p.name}</a> : p.name}</h3>
-                  <span className="mono muted">{p.year}</span>
-                </header>
-                <p className="mono muted">{p.stack}</p>
-                <p>{p.why}</p>
-                <p>{p.how}</p>
-                {p.note && <p className="mono muted">{p.note}</p>}
-              </div>
-              {demo && <Demo name={demo[0]} Component={demo[1]} />}
-              {p.id === 'laparolymph' && <Poster />}
-            </Window>
-          </li>
-        );
-      })}
+      {siteProjects.map((p, i) => (
+        <li
+          key={p.id}
+          className="project"
+          style={{ '--i': i, '--n': siteProjects.length } as CSSProperties}
+          data-match={(skill && p.skills.includes(skill)) || undefined}
+        >
+          <Window title={demos[p.id] ? `${p.id}.app` : p.id} tone={tones[i % tones.length]} aria-labelledby={`${p.id}-name`} role="group">
+            <ProjectBody project={p} />
+          </Window>
+        </li>
+      ))}
     </ol>
   );
 }

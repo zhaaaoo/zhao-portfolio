@@ -1,13 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Part } from '../inspect';
 
-export const sections = [
-  { id: 'work', title: 'Work' },
-  { id: 'projects', title: 'Projects' },
-  { id: 'notes', title: 'How I work' },
-  { id: 'earlier', title: 'Earlier' },
-  { id: 'colophon', title: 'This site' },
-];
+export type NavItem = { label: string; href?: string; onClick?: () => void };
 
 const clock = new Intl.DateTimeFormat('en-SG', { weekday: 'short', hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Singapore' });
 
@@ -21,27 +15,55 @@ function Clock() {
 }
 
 type Props = {
+  nav: NavItem[];
+  plain: boolean;
+  canDesk: boolean;
+  onView: () => void;
   theme: string;
   onTheme: () => void;
   inspecting: boolean;
   onInspect: () => void;
 };
 
-export default function Header({ theme, onTheme, inspecting, onInspect }: Props) {
+export default function Header({ nav, plain, canDesk, onView, theme, onTheme, inspecting, onInspect }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  // the bar wraps on narrow screens, so publish its real height for the desk and windows to sit under
+  useLayoutEffect(() => {
+    const bar = ref.current!;
+    const observer = new ResizeObserver(() => document.documentElement.style.setProperty('--menubar', `${bar.offsetHeight}px`));
+    observer.observe(bar);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <Part name="Header" as="header" className="topbar">
+    <Part ref={ref} name="Header" as="header" className="topbar">
       <a href="#top" className="topbar-name">
         Wang Zhao
       </a>
       <nav aria-label="Sections" className="topbar-nav">
-        {sections.map((s, i) => (
-          <a key={s.id} href={`#${s.id}`} className="mono">
-            §{i + 1} {s.title}
-          </a>
-        ))}
+        {nav.map((item) =>
+          item.href ? (
+            <a key={item.label} href={item.href} className="mono">
+              {item.label}
+            </a>
+          ) : (
+            <button key={item.label} type="button" className="mono topbar-link" onClick={item.onClick}>
+              {item.label}
+            </button>
+          ),
+        )}
       </nav>
       <div className="topbar-tools">
         <Clock />
+        <a className="button" data-variant="signal" href="/wang-zhao-resume.pdf">
+          Resume
+        </a>
+        {canDesk && (
+          <button type="button" className="button" onClick={onView}>
+            {plain ? 'Desk view' : 'Plain view'}
+          </button>
+        )}
         <button type="button" className="button" onClick={onTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
           {theme === 'dark' ? 'Light' : 'Dark'}
         </button>
