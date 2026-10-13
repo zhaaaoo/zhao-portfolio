@@ -1218,3 +1218,14 @@ html.desk-mode body {
     clip-path: inset(50%);
   }
 }
+
+.send {
+  margin-top: 1.25rem;
+}
+
+.send-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}

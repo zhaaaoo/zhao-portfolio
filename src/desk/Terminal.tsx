@@ -3,7 +3,7 @@ import { beforeStories, intro, interests, notes, siteProjects, stories } from '.
 import { education, experience } from '../content/resume';
 import type { WinId } from './windows';
 
-type Props = { onOpen: (id: WinId) => void; onTheme: () => void; onPlain: () => void };
+type Props = { onOpen: (id: WinId) => void; onTheme: () => void; onPlain: () => void; onScene: (scene: 'island' | 'desk') => void };
 
 const files: Record<string, () => string[]> = {
   'notes.txt': () => notes.flatMap((n) => [`# ${n.title}`, n.body, '']),
@@ -28,7 +28,7 @@ const openable: Record<string, WinId> = {
 
 const commands = ['help', 'ls', 'cat', 'open', 'whoami', 'theme', 'plain', 'clear'];
 
-export default function Terminal({ onOpen, onTheme, onPlain }: Props) {
+export default function Terminal({ onOpen, onTheme, onPlain, onScene }: Props) {
   const [lines, setLines] = useState<string[]>(['type `help` to see what this can do']);
   const [input, setInput] = useState('');
   const history = useRef<string[]>([]);
@@ -59,7 +59,10 @@ export default function Terminal({ onOpen, onTheme, onPlain }: Props) {
         else out.push(`cat: ${arg || '(nothing)'}: no such file`);
         break;
       case 'open':
-        if (arg === 'resume' || arg === 'resume.pdf') {
+        if (arg === 'desk' || arg === 'island') {
+          onScene(arg);
+          out.push(arg === 'desk' ? 'you found the old desk. `open island` to go back' : 'back to the island');
+        } else if (arg === 'resume' || arg === 'resume.pdf') {
           window.open('/wang-zhao-resume.pdf', '_blank', 'noopener');
           out.push('opening resume.pdf');
         } else if (openable[arg]) {

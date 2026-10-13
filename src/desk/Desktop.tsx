@@ -11,6 +11,27 @@ import { StickerLayer, StickerSheet, useStickers } from './Stickers';
 import { meta, type Desktop as DesktopApi, type ObjectId, type Win, type WinId } from './windows';
 
 const DeskScene = lazy(() => import('./DeskScene'));
+const IslandScene = lazy(() => import('../island/Island'));
+
+type ZoneId = import('../island/Island').ZoneId;
+
+const activities: { zone: ZoneId; label: string }[] = [
+  { zone: 'work', label: 'to work' },
+  { zone: 'projects', label: 'to my side projects' },
+  { zone: 'snowboard', label: 'snowboarding' },
+  { zone: 'dive', label: 'diving' },
+  { zone: 'boulder', label: 'bouldering' },
+  { zone: 'hike', label: 'hiking' },
+  { zone: 'dance', label: 'dancing' },
+];
+
+const hobbies: Partial<Record<ZoneId, string>> = {
+  snowboard: 'Snowboarding',
+  dive: 'Diving',
+  boulder: 'Bouldering',
+  hike: 'Hiking',
+  dance: 'Dance',
+};
 
 const dock: { id: WinId; label: string; glyph: string; tone: string }[] = [
   { id: 'about', label: 'About', glyph: '♡', tone: 'var(--lilac)' },
@@ -85,6 +106,18 @@ export default function Desktop({ desktop, theme, onTheme, onPlain }: Props) {
   const [skill, setSkill] = useState<string | null>(null);
   const { stickers, grab, place, remove } = useStickers(useCallback((s: string) => setSkill(s), []));
   const { wins, top, open, close } = desktop;
+  const [scene, setScene] = useState<'island' | 'desk'>('island');
+  const [go, setGo] = useState<{ zone: ZoneId; n: number } | null>(null);
+  const [note, setNote] = useState<string | null>(null);
+
+  const arrive = useCallback(
+    (zone: ZoneId) => {
+      if (zone === 'work') open('work');
+      else if (zone === 'projects') open('projects');
+      setNote(hobbies[zone] ? `${hobbies[zone]}: one of the things I do away from a keyboard.` : null);
+    },
+    [open],
+  );
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -94,6 +127,19 @@ export default function Desktop({ desktop, theme, onTheme, onPlain }: Props) {
     return () => removeEventListener('keydown', onKey);
   }, [top, close]);
 
+  const sendPanel = scene === 'island' && (
+    <div className="send">
+      <p className="mono muted">Drag me around the island, or send me</p>
+      <p className="send-buttons">
+        {activities.map((a) => (
+          <button key={a.zone} type="button" className="button" onClick={() => setGo({ zone: a.zone, n: (go?.n ?? 0) + 1 })}>
+            {a.label}
+          </button>
+        ))}
+      </p>
+    </div>
+  );
+
   const content = (id: WinId): ReactNode => {
     if (id.startsWith('project:')) return <ProjectBody project={siteProjects.find((p) => `project:${p.id}` === id)!} />;
     switch (id) {
@@ -101,9 +147,8 @@ export default function Desktop({ desktop, theme, onTheme, onPlain }: Props) {
         return (
           <>
             <IntroText heading={false} />
-            <p className="muted desk-hint">
-              Click things on the desk, or use the menu. Prefer a normal page? Use Plain view in the menu bar.
-            </p>
+            {sendPanel}
+            <p className="muted desk-hint">The dock has everything as windows. Prefer a normal page? Use Plain view in the menu bar.</p>
           </>
         );
       case 'about':
@@ -113,6 +158,7 @@ export default function Desktop({ desktop, theme, onTheme, onPlain }: Props) {
             <div>
               <IntroText heading={false} />
               <Interests />
+              {sendPanel}
             </div>
           </div>
         );
@@ -141,7 +187,7 @@ export default function Desktop({ desktop, theme, onTheme, onPlain }: Props) {
           </>
         );
       case 'terminal':
-        return <Terminal onOpen={open} onTheme={onTheme} onPlain={onPlain} />;
+        return <Terminal onOpen={open} onTheme={onTheme} onPlain={onPlain} onScene={setScene} />;
       case 'stickers':
         return <StickerSheet onGrab={grab} onPlace={place} />;
     }
@@ -158,8 +204,12 @@ export default function Desktop({ desktop, theme, onTheme, onPlain }: Props) {
     <HighlightContext.Provider value={skill}>
       <main id="main" className="desktop">
         <h1 className="visually-hidden">Wang Zhao, software engineer</h1>
-        <Suspense fallback={<p className="desk-loading mono muted">loading the desk…</p>}>
-          <DeskScene theme={theme} focus={(top && meta(top.id).object) ?? null} onPick={(o) => open(objectWindow[o])} onOpen={open} />
+        <Suspense fallback={<p className="desk-loading mono muted">loading the island…</p>}>
+          {scene === 'island' ? (
+            <IslandScene theme={theme} go={go} onArrive={arrive} />
+          ) : (
+            <DeskScene theme={theme} focus={(top && meta(top.id).object) ?? null} onPick={(o) => open(objectWindow[o])} onOpen={open} />
+          )}
         </Suspense>
 
         {wins.map((win) => (
@@ -182,6 +232,20 @@ export default function Desktop({ desktop, theme, onTheme, onPlain }: Props) {
         </nav>
 
         <StickerLayer stickers={stickers} onRemove={remove} />
+
+        {note && !skill && (
+          <aside className="evidence" aria-live="polite">
+            <p>{note}</p>
+            <p className="evidence-links">
+              <button type="button" className="button" onClick={() => open('about')}>
+                About me
+              </button>
+              <button type="button" className="button" onClick={() => setNote(null)}>
+                Close
+              </button>
+            </p>
+          </aside>
+        )}
 
         {skill && (
           <aside className="evidence" aria-live="polite">
