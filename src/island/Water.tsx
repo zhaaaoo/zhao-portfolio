@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Color, type ShaderMaterial } from 'three';
+import { Color, DoubleSide, type ShaderMaterial } from 'three';
 
 type Props = { shallow: string; deep: string; foam: string; glow: number; shore: number };
 
@@ -10,6 +10,7 @@ export default function Water({ shallow, deep, foam, glow, shore }: Props) {
   const params = useMemo(
     () => ({
       transparent: true,
+      side: DoubleSide,
       uniforms: {
         time: { value: 0 },
         shallow: { value: new Color(shallow) },
@@ -50,6 +51,8 @@ export default function Water({ shallow, deep, foam, glow, shore }: Props) {
             // little highlights on wave crests
             colour += vec3(0.12) * smoothstep(0.06, 0.09, vWave);
             float fade = 1.0 - smoothstep(26.0, 34.0, d);
+            // seen from below: a bright, rippling ceiling
+            if (!gl_FrontFacing) colour = mix(shallow * 1.25, vec3(1.0), 0.25 + 3.0 * max(vWave, 0.0));
             gl_FragColor = vec4(colour, 0.92 * fade);
             #include <colorspace_fragment>
           }

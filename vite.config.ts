@@ -9,7 +9,7 @@ export default defineConfig({
   },
   build: {
     // the three.js scene is one lazy chunk loaded after first paint
-    chunkSizeWarningLimit: 1100,
+    chunkSizeWarningLimit: 1300,
     rollupOptions: {
       input: { main: 'index.html', resume: 'resume/index.html' },
       output: {
