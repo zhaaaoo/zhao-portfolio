@@ -35,7 +35,6 @@ export const experience: Role[] = [
     points: [
       'Build features in React and TypeScript (Redux Toolkit, Ant Design) across several micro-frontend apps, including pages built around embedded Qlik dashboards, plus light backend debugging and data preparation on the Spring Boot side.',
       'Built and extended several reusable React components in the team’s shared Storybook library, such as paginated, user-configurable tables.',
-      'Cut validation of a 1 GB file set from about an hour to about 15 minutes in a Spring Boot CLI application, and reworked it with its original developer so validation rules are configurable.',
       'Deployed the platform’s frontend, backend, batch and cache services to Windows servers at the client’s military camps: IIS, TLS certificates, database access, firewall rules and Windows services (NSSM, WinSW), with PowerShell scripts to automate the setup. Debugged configuration and connectivity issues on site.',
     ],
   },

@@ -33,7 +33,7 @@ test('terminal opens windows from commands', async ({ page }) => {
   const input = page.getByLabel('Terminal command');
   await input.fill('cat work/validation.md');
   await input.press('Enter');
-  await expect(page.getByText(/about an hour to about 15 minutes/)).toBeVisible();
+  await expect(page.getByText(/small Java UDP receiver/)).toBeVisible();
   await input.fill('open browhen');
   await input.press('Enter');
   await expect(page.getByRole('dialog', { name: 'browhen.app' })).toBeVisible();
