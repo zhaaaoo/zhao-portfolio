@@ -32,13 +32,12 @@ export const stories: Story[] = [
   },
   {
     id: 'validation',
-    title: 'A faster, configurable validation CLI',
+    title: 'A configurable validation CLI',
     when: 'Nov 2024 – Sep 2025',
     summary: 'A Spring Boot command-line app that checks large file sets as they move between machines.',
     points: [
       'Started as its tester, writing code that generates sample files to hit each rule.',
       'Came back as a developer for a second, far more conditional rule set. Restructured it with the original developer (template method, factory and strategy classes) so processing steps can be reordered and rules are built from configurable parts.',
-      'Cut validation of a 1 GB file set from about an hour to about 15 minutes: parallel batch reads, a custom buffered reader, and computing each file’s SHA during the read so a file is read once instead of twice.',
       'Also wrote a small Java UDP receiver that checks each packet’s byte structure before saving it, and updated the architecture docs with the architect.',
     ],
     where: ['File transfer', 'Validation CLI', 'Packet receiver'],
